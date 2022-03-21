@@ -1,29 +1,34 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.21"
-    kotlin("plugin.serialization") version "1.5.21"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.serialization") version "1.6.10"
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
 
 repositories {
-    maven("https://repo.maven.apache.org/maven2/")
-    maven("https://papermc.io/repo/repository/maven-public/")
     mavenCentral()
+    maven("https://papermc.io/repo/repository/maven-public/")
 }
 val kordVersion: String by project
 dependencies {
-    compileOnly(kotlin("stdlib-jdk8:1.5.21"))
-    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
-    compileOnly("io.github.monun:kommand-api:2.6.6")
+    compileOnly(kotlin("stdlib"))
+    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+    compileOnly("io.github.monun:kommand-core:2.10.0")
 
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
     compileOnly("dev.kord:kord-core:$kordVersion")
 }
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_16.toString()
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     create<Jar>("sourcesJar") {
@@ -35,6 +40,7 @@ tasks {
         filesMatching("**/*.yml") {
             expand(project.properties)
         }
+        filteringCharset = "UTF-8"
     }
 
     register<Jar>("paperJar") {
